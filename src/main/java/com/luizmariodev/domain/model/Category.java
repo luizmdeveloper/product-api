@@ -6,7 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "categories")
@@ -16,9 +16,9 @@ public class Category {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull
+	@NotBlank
 	@Column(name="name")
-	private String nameCategory;
+	private String name;
 	
 	public Long getId() {
 		return id;
@@ -28,12 +28,12 @@ public class Category {
 		this.id = id;
 	}
 	
-	public String getNameCategory() {
-		return nameCategory;
+	public String getName() {
+		return name;
 	}
 
-	public void setNameCategory(String nameCategory) {
-		this.nameCategory = nameCategory;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override

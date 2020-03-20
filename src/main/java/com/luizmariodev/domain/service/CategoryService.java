@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.luizmariodev.domain.exception.EntityNotFoundException;
 import com.luizmariodev.domain.model.Category;
 import com.luizmariodev.domain.repository.CategoryRepository;
 
@@ -24,25 +25,24 @@ public class CategoryService {
 	
 	@Transactional
 	public Category update(Long categoryId, Category category) {
-		Optional<Category> optionalCategory = findById(categoryId);
-		if (optionalCategory.isPresent()) {
-			Category categorySave = optionalCategory.get();
-			BeanUtils.copyProperties(category, categorySave, "id");
-			categoryRepository.save(categorySave);			
-			return categorySave;
-		}
-		return category;
+		Category categorySave = findById(categoryId);
+		BeanUtils.copyProperties(category, categorySave, "id");
+		categoryRepository.save(categorySave);			
+		return categorySave;
 	}
 	
 	@Transactional
 	public void delete(Long categoryId) {
-		Optional<Category> optionalCategory = findById(categoryId);		
-		if (optionalCategory.isPresent())
-			categoryRepository.delete(optionalCategory.get());		
+		Category categorySave =  findById(categoryId);		
+		categoryRepository.delete(categorySave);		
 	}
 	
-	private Optional<Category> findById(Long categoryId) {		
-		return categoryRepository.findById(categoryId);
+	private Category findById(Long categoryId) {
+		Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+		if (!optionalCategory.isPresent())
+			throw new EntityNotFoundException("Category not found");
+		
+		return optionalCategory.get();
 	}
 
 }

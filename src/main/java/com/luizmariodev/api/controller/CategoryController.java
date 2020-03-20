@@ -3,6 +3,8 @@ package com.luizmariodev.api.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,12 +46,12 @@ public class CategoryController {
 	}
 	
 	@PostMapping
-	public Category save(@RequestBody Category category) {
+	public Category save(@Valid @RequestBody Category category) {
 		return categorySerivce.save(category);
 	}
 	
 	@PutMapping("{categoryId}")
-	public Category update(@PathVariable Long categoryId, @RequestBody Category category) {		
+	public Category update(@PathVariable Long categoryId, @Valid @RequestBody Category category) {		
 		return categorySerivce.update(categoryId, category);
 	}
 	

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.luizmariodev.domain.exception.EntityConflictExcection;
 import com.luizmariodev.domain.exception.EntityNotFoundException;
 
 @ControllerAdvice
@@ -50,11 +51,19 @@ public class ProductApiExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	@ExceptionHandler({EntityNotFoundException.class})
 	protected ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest request) {
+		ProblemDetail problem = criarProblemaBuilder(TypeProblem.DATA_NOT_FOUND, HttpStatus.CONFLICT, ex.getMessage());
+		problem.setMessage(ex.getMessage());
+
+		return handleExceptionInternal(ex, problem, new HttpHeaders(), HttpStatus.CONFLICT, request);
+	}
+	
+	@ExceptionHandler({EntityConflictExcection.class})
+	protected ResponseEntity<Object> handleEntityConflictExcection(EntityConflictExcection ex, WebRequest request) {
 		ProblemDetail problem = criarProblemaBuilder(TypeProblem.DATA_NOT_FOUND, HttpStatus.NOT_FOUND, ex.getMessage());
 		problem.setMessage(ex.getMessage());
 
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
-	}
+	}	
 	
 	@Override
 	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body,
